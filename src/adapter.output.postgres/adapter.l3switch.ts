@@ -19,7 +19,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
   async listAll(): Promise<Id[]> {
     const models = await this.db<DeviceModel>('devices')
       .select('id')
-      .where({ type: 'switch' })
+      .where({ genus: 'switch' })
     return models.map((model) => Id.from(model.id))
   }
 
@@ -34,7 +34,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
 
   private async fetchSwitchModel(id: Id): Promise<DeviceModel> {
     const model = await this.db<DeviceModel>('devices')
-      .where({ type: 'switch', id: String(id) })
+      .where({ genus: 'switch', id: String(id) })
       .first()
     if (model === undefined) {
       throw new NotFoundError('switch not found')

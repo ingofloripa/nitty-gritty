@@ -57,6 +57,10 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
     return this.devices?.size === this.numOfPorts
   }
 
+  public get genus(): string {
+    return 'router'
+  }
+
   private assertIsNotShallowInstance(): void {
     if (this.devices === undefined) {
       throw new InternalServerError({

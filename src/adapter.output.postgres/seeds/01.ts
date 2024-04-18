@@ -5,8 +5,8 @@ import { DeviceModel, LinkModel, NetworkModel } from '../models'
 
 const DEVICES: DeviceModel[] = [
   {
-    type: 'router',
-    subtype: 'core',
+    genus: 'router',
+    species: 'core',
     id: '10000000-0000-4000-8000-000000000000',
     desc: 'Ching Ling Core Router',
     ip: '10.0.0.1',
@@ -15,8 +15,8 @@ const DEVICES: DeviceModel[] = [
     n_ports: 2,
   },
   {
-    type: 'router',
-    subtype: 'edge',
+    genus: 'router',
+    species: 'edge',
     id: '20000000-0000-4000-8000-000000000000',
     desc: 'Ching Ling Edge Router',
     ip: '10.0.0.2',
@@ -25,8 +25,8 @@ const DEVICES: DeviceModel[] = [
     n_ports: 2,
   },
   {
-    type: 'switch',
-    subtype: 'l3',
+    genus: 'switch',
+    species: 'l3',
     id: '30000000-0000-4000-8000-000000000000',
     desc: 'Ching Ling Layer 3 Switch',
     ip: '10.0.0.3',

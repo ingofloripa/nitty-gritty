@@ -3,9 +3,6 @@
 import { Description, Id, Ip4, Location } from 'src/value-objects'
 
 export abstract class Device {
-  public readonly type: string = 'unknown'
-  public readonly subType: string = 'unknown'
-
   public constructor(
     public readonly id: Id,
     public readonly description: Description,
@@ -20,6 +17,10 @@ export abstract class Device {
     desc = desc.substring(0, 12) + (desc.length > 12 ? '...' : '')
     return `${id}:${desc}@${this.ip}:${this.location}`
   }
+
+  public abstract get genus(): string
+
+  public abstract get species(): string
 
   public abstract isAllPortsAvailable(): boolean
 

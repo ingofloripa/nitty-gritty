@@ -11,9 +11,8 @@ import {
 } from '@nestjs/common'
 import { RouterInputPort } from 'src/port.input'
 import { Description, Id, Ip4, Location } from 'src/value-objects'
-import { IdDto, RouterDto } from './dtos'
+import { CreateRouterArgsDto, IdDto, RouterDto } from './dtos'
 import { mapFromRouter } from './mappers'
-import { CreateRouterArgsDto } from './validators'
 
 @Controller('router/')
 export class RouterInputAdapter {

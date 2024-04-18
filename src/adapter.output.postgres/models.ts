@@ -1,8 +1,8 @@
 // Written by Ingo Schmidt, in 2024.
 
 export interface DeviceModel {
-  type: string
-  subtype: string
+  genus: string
+  species: string
   id: string // format: UUID
   desc: string
   ip: string

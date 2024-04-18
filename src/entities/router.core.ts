@@ -3,11 +3,12 @@
 import { Router } from './router.abstract'
 
 export class CoreRouter extends Router<Router> {
-  public readonly type: string = 'router'
-  public readonly subType: string = 'core'
-
   public isDeviceLinkable(device: Router): boolean {
     return device instanceof Router
+  }
+
+  public get species(): string {
+    return 'core'
   }
 }
 

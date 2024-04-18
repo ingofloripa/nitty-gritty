@@ -3,7 +3,7 @@
 import { Body, Controller, Delete, Param, Post, ValidationPipe } from '@nestjs/common'
 import { NetworkInputPort } from 'src/port.input/network'
 import { Id, Ip4, Network } from 'src/value-objects'
-import { AddNetworkArgsDto } from './validators'
+import { AddNetworkArgsDto } from './dtos'
 
 @Controller('network/')
 export class NetworkInputAdapter {

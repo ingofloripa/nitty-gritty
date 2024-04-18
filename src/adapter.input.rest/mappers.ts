@@ -5,7 +5,7 @@ import { Network } from 'src/value-objects'
 import { L3SwitchDto, NetworkDto, RouterDto } from './dtos'
 
 export const mapFromRouter = (router: Router): RouterDto => ({
-  type: router.subType,
+  type: router.species,
   id: String(router.id),
   description: String(router.description),
   ip: String(router.ip),

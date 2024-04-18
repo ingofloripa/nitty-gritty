@@ -6,8 +6,8 @@ import { Description, Id, Ip4, Location, Network } from 'src/value-objects'
 import { DeviceModel, NetworkModel } from './models'
 
 export const mapFromDevice = (device: Device): DeviceModel => ({
-  type: device.type,
-  subtype: device.subType,
+  genus: device.genus,
+  species: device.species,
   id: String(device.id),
   desc: String(device.description),
   ip: String(device.ip),
@@ -22,7 +22,7 @@ export const mapToDevice = <T extends Device = Device>(model: DeviceModel): T =>
   const ip = new Ip4(model.ip)
   const location = new Location({ lat: model.lat, lon: model.lon })
   const numOfPorts = model.n_ports
-  switch (`${model.type}:${model.subtype}`) {
+  switch (`${model.genus}:${model.species}`) {
     case 'router:core':
       return new CoreRouter(id, desc, ip, location, numOfPorts) as unknown as T
     case 'router:edge':

@@ -11,9 +11,8 @@ import {
 } from '@nestjs/common'
 import { L3SwitchInputPort } from 'src/port.input'
 import { Description, Id, Ip4, Location } from 'src/value-objects'
-import { IdDto, L3SwitchDto } from './dtos'
+import { CreateL3SwitchArgsDto, IdDto, L3SwitchDto } from './dtos'
 import { mapFromL3Switch } from './mappers'
-import { CreateL3SwitchArgsDto } from './validators'
 
 @Controller('switch/')
 export class L3SwitchInputAdapter {

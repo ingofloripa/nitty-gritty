@@ -4,8 +4,8 @@ import { Knex } from 'knex'
 
 export const up = async (db: Knex) => {
   await db.schema.createTable('devices', (table) => {
-    table.enum('type', ['router', 'switch'])
-    table.enum('subtype', ['core', 'edge', 'l3'])
+    table.enum('genus', ['router', 'switch'])
+    table.enum('species', ['core', 'edge', 'l3'])
     table.string('id').primary()
     table.string('desc').notNullable()
     table.string('ip').notNullable()

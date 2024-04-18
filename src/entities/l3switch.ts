@@ -5,9 +5,6 @@ import { Network } from 'src/value-objects'
 import { Device } from './device'
 
 export class L3Switch extends Device {
-  public readonly type: string = 'switch'
-  public readonly subType: string = 'l3'
-
   // #TRICK: late initialization required for entity rehidration from the output port
   public setNetworks(networks: Network[]): void {
     const _networks = new Map() as Map<string, Network>
@@ -52,6 +49,14 @@ export class L3Switch extends Device {
   public isAllPortsUsed(): boolean {
     this.assertIsNotShallowInstance()
     return this.networks?.size === this.numOfPorts
+  }
+
+  public get genus(): string {
+    return 'switch'
+  }
+
+  public get species(): string {
+    return 'l3'
   }
 
   private assertIsNotShallowInstance(): void {

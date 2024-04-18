@@ -19,7 +19,7 @@ export class RouterOutputAdapter extends RouterOutputPort {
   async listAll(): Promise<Id[]> {
     const models = await this.db<DeviceModel>('devices')
       .select('id')
-      .where({ type: 'router' })
+      .where({ genus: 'router' })
     return models.map((model) => Id.from(model.id))
   }
 
@@ -34,7 +34,7 @@ export class RouterOutputAdapter extends RouterOutputPort {
 
   private async fetchRouterModel(id: Id): Promise<DeviceModel> {
     const model = await this.db<DeviceModel>('devices')
-      .where({ type: 'router', id: String(id) })
+      .where({ genus: 'router', id: String(id) })
       .first()
     if (model === undefined) {
       throw new NotFoundError('router not found')
