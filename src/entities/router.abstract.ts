@@ -2,8 +2,20 @@
 
 import { ConflictError, InternalServerError } from 'src/errors'
 import { Device } from './device'
+import { Country, Description, Id, Ip4, Location } from 'src/value-objects'
 
 export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends Device {
+  public constructor(
+    id: Id,
+    description: Description,
+    ip: Ip4,
+    location: Location,
+    public readonly country: Country,
+    numOfPorts: number,
+  ) {
+    super(id, description, ip, location, numOfPorts)
+  }
+
   // #TRICK: late initialization required for entity rehidration from the output port
   public setLinkedDevices(devices: LINKABLE_DEVICE[]): void {
     this.devices = new Map<string, LINKABLE_DEVICE>()
@@ -31,10 +43,13 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
     if (!this.isDeviceLinkable(device)) {
       throw new ConflictError('unable to link this kind of device')
     }
+    if (this.ip.isEqual(device.ip)) {
+      throw new ConflictError('unable to link this device (same IP)')
+    }
     this.devices.set(String(device.id), device)
   }
 
-  public abstract isDeviceLinkable(device: LINKABLE_DEVICE): boolean
+  protected abstract isDeviceLinkable(device: LINKABLE_DEVICE): boolean
 
   public unlinkDevice(device: LINKABLE_DEVICE): void {
     this.assertIsNotShallowInstance()

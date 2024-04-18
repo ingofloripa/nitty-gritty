@@ -8,6 +8,7 @@ export interface DeviceModel {
   ip: string
   lat: number
   lon: number
+  country?: string
   n_ports: number
 }
 

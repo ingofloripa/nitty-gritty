@@ -25,7 +25,10 @@ export class L3Switch extends Device {
   public addNetwork(network: Network): void {
     this.assertIsNotShallowInstance()
     if (this.networks.has(network.name)) {
-      throw new ConflictError('network already exists')
+      throw new ConflictError('network name already used')
+    }
+    if (this.getNetworks().some(({ ip }) => ip.isEqual(network.ip))) {
+      throw new ConflictError('network IP already used')
     }
     if (this.isAllPortsUsed()) {
       throw new ConflictError('unable to add another network (no ports available)')

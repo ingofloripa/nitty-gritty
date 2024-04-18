@@ -2,7 +2,7 @@
 
 import { IsNumber, IsString } from 'class-validator'
 
-export class CreateDeviceArgsDto {
+class CreateDeviceArgsDto {
   @IsString()
   ip: string
   @IsString()
@@ -18,6 +18,8 @@ export class CreateDeviceArgsDto {
 export class CreateRouterArgsDto extends CreateDeviceArgsDto {
   @IsString()
   type: string
+  @IsString()
+  country: string
 }
 
 export class CreateL3SwitchArgsDto extends CreateDeviceArgsDto {}

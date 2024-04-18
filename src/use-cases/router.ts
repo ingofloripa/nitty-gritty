@@ -27,14 +27,15 @@ export class RouterUseCase extends RouterInputPort {
     description,
     ip,
     location,
+    country,
     numOfPorts,
   }: CreateRouterArgs): Promise<Router> {
     const id = Id.create()
     let router: Router
     if (type === 'core') {
-      router = new CoreRouter(id, description, ip, location, numOfPorts)
+      router = new CoreRouter(id, description, ip, location, country, numOfPorts)
     } else if (type === 'edge') {
-      router = new EdgeRouter(id, description, ip, location, numOfPorts)
+      router = new EdgeRouter(id, description, ip, location, country, numOfPorts)
     } else {
       throw new InternalServerError('invalid router type')
     }
@@ -45,7 +46,9 @@ export class RouterUseCase extends RouterInputPort {
 
   async linkToCoreRouter(routerId: Id, coreRouterId: Id): Promise<void> {
     const coreRouter = await this.router.retrieve(coreRouterId)
+    console.debug(coreRouter)
     const router = await this.router.retrieve(routerId)
+    console.debug(router)
     coreRouter.linkDevice(router)
     await this.link.create({
       parentDeviceId: coreRouterId,

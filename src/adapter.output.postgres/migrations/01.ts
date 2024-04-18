@@ -11,6 +11,7 @@ export const up = async (db: Knex) => {
     table.string('ip').notNullable()
     table.float('lat').notNullable()
     table.float('lon').notNullable()
+    table.string('country')
     table.smallint('n_ports').notNullable()
   })
   await db.schema.createTable('links', (table) => {

@@ -7,7 +7,7 @@ import { L3Switch } from 'src/entities'
 import { InternalServerError, NotFoundError } from 'src/errors'
 import { L3SwitchOutputPort } from 'src/port.output'
 import { Id } from 'src/value-objects'
-import { mapFromDevice, mapToDevice, mapToNetwork } from './mappers'
+import { mapFromL3Switch, mapToDevice, mapToNetwork } from './mappers'
 import { DeviceModel, NetworkModel } from './models'
 
 @Injectable()
@@ -50,7 +50,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
   }
 
   async persist(l3switch: L3Switch): Promise<void> {
-    const model = mapFromDevice(l3switch)
+    const model = mapFromL3Switch(l3switch)
     await this.db('devices').insert(model)
     if (l3switch.getNetworks().length > 0) {
       throw new InternalServerError('Panic (unable to persist switch networks)')

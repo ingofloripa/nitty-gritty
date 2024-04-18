@@ -10,7 +10,7 @@ import {
   ValidationPipe,
 } from '@nestjs/common'
 import { RouterInputPort } from 'src/port.input'
-import { Description, Id, Ip4, Location } from 'src/value-objects'
+import { Country, Description, Id, Ip4, Location } from 'src/value-objects'
 import { CreateRouterArgsDto, IdDto, RouterDto } from './dtos'
 import { mapFromRouter } from './mappers'
 
@@ -39,6 +39,7 @@ export class RouterInputAdapter {
       ip: new Ip4(body.ip),
       description: new Description(body.description),
       location: new Location({ lat: body.latitude, lon: body.longitude }),
+      country: body.country as Country,
       numOfPorts: body.numOfPorts,
     })
     return { id: String(id) }

@@ -3,8 +3,8 @@
 L3SWITCH_ID=$1
 
 DATA="{ \
-  \"name\": \"$(shuf -i 1-999 -n 1)\", \
-  \"ip\": \"$(shuf -i 0-255 -n 1).$(shuf -i 0-255 -n 1).$(shuf -i 0-255 -n 1).$(shuf -i 0-255 -n 1)\", \
+  \"name\": \"$(shuf -i 1-10 -n 1)\", \
+  \"ip\": \"10.0.0.$(shuf -i 1-10 -n 1)\", \
   \"cidr\":$(shuf -i 8-31 -n 1)
 }"
 

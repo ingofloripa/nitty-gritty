@@ -1,13 +1,14 @@
 // Written by Ingo Schmidt, in 2024.
 
 import { Router } from 'src/entities'
-import { Description, Id, Ip4, Location } from 'src/value-objects'
+import { Country, Description, Id, Ip4, Location } from 'src/value-objects'
 
 export type CreateRouterArgs = {
   type: string
   description: Description
   ip: Ip4
   location: Location
+  country: Country
   numOfPorts: number
 }
 

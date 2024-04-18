@@ -7,7 +7,7 @@ import { Router } from 'src/entities'
 import { InternalServerError, NotFoundError } from 'src/errors'
 import { RouterOutputPort } from 'src/port.output'
 import { Id } from 'src/value-objects'
-import { mapFromDevice, mapToDevice } from './mappers'
+import { mapFromRouter, mapToDevice } from './mappers'
 import { DeviceModel, LinkModel } from './models'
 
 @Injectable()
@@ -54,7 +54,7 @@ export class RouterOutputAdapter extends RouterOutputPort {
   }
 
   async persist(router: Router): Promise<void> {
-    const model = mapFromDevice(router)
+    const model = mapFromRouter(router)
     await this.db('devices').insert(model)
     if (router.getLinkedDevices().length > 0) {
       throw new InternalServerError('Panic (unable to persist router linked devices)')

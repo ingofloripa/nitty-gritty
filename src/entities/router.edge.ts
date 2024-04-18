@@ -4,7 +4,7 @@ import { Router } from './router.abstract'
 import { L3Switch } from './l3switch'
 
 export class EdgeRouter extends Router<L3Switch> {
-  public isDeviceLinkable(device: L3Switch): boolean {
+  protected isDeviceLinkable(device: L3Switch): boolean {
     return device instanceof L3Switch
   }
 
