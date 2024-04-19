@@ -35,9 +35,9 @@ export class L3Switch extends Device {
     this.networks.set(network.name, network)
   }
 
-  public removeNetwork(network: Network): void {
-    new NetworkExistsRule(this, network).passOrThrow()
-    this.networks.delete(network.name)
+  public removeNetwork(networkName: string): void {
+    new NetworkExistsRule(this, networkName).passOrThrow()
+    this.networks.delete(networkName)
   }
 
   public get numOfPortsUsed(): number {

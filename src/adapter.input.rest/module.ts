@@ -36,9 +36,11 @@ export class RestInputModule {
         },
         {
           provide: NetworkInputPort,
-          useFactory: (network: NetworkOutputPort): NetworkInputPort =>
-            new NetworkUseCase(network),
-          inject: [NetworkOutputPort],
+          useFactory: (
+            network: NetworkOutputPort,
+            l3switch: L3SwitchOutputPort,
+          ): NetworkInputPort => new NetworkUseCase(network, l3switch),
+          inject: [NetworkOutputPort, L3SwitchOutputPort],
         },
       ],
     }

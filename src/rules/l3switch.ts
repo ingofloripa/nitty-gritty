@@ -2,7 +2,7 @@
 
 import { L3Switch } from 'src/entities'
 import { ConflictError, NotFoundError } from 'src/errors'
-import { Ip4, Network } from 'src/value-objects'
+import { Ip4 } from 'src/value-objects'
 import { AbstractRule } from './abstract'
 
 export class NetworkNameIsAvailableRule extends AbstractRule {
@@ -42,13 +42,13 @@ export class NetworkIpIsAvaliableRule extends AbstractRule {
 export class NetworkExistsRule extends AbstractRule {
   public constructor(
     private readonly l3switch: L3Switch,
-    private readonly network: Network,
+    private readonly networkName: string,
   ) {
     super()
   }
 
   public isSatisfied(): boolean {
-    return this.l3switch.getNetworks().some(({ name }) => name === this.network.name)
+    return this.l3switch.getNetworks().some(({ name }) => name === this.networkName)
   }
 
   protected createError(): Error {
