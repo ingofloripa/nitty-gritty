@@ -15,7 +15,7 @@ export class Id {
   private constructor(id: string | Id) {
     const value = String(id)
     if (!validateUuid(value)) {
-      throw new BadRequestError('invalid ID (must be an UUID)')
+      throw new BadRequestError('invalid ID (must be an UUID)', { id: value })
     }
     this.value = value
   }

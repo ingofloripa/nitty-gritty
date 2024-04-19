@@ -17,7 +17,10 @@ export class DeviceIsNotLinkedRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('device already linked')
+    throw new ConflictError('device already linked', {
+      router: String(this.router.id),
+      device: String(this.device.id),
+    })
   }
 }
 
@@ -34,7 +37,10 @@ export class DeviceIsLinkedRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('device already unlinked')
+    throw new ConflictError('device already unlinked', {
+      router: String(this.router.id),
+      device: String(this.device.id),
+    })
   }
 }
 
@@ -54,7 +60,10 @@ export class DeviceIsLinkableRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('device already linked')
+    throw new ConflictError('device is not linkable', {
+      router: { id: String(this.router.id), species: this.router.species },
+      device: { id: String(this.device.id), genus: this.device.genus },
+    })
   }
 }
 
@@ -74,7 +83,10 @@ export class DeviceIsAtSuitableCountryRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('device from another country')
+    throw new ConflictError('device from another country', {
+      router: { id: String(this.router.id), country: this.router.country },
+      device: { id: String(this.device.id), country: this.device['country'] },
+    })
   }
 }
 

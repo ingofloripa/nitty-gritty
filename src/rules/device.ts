@@ -14,7 +14,7 @@ export class PortIsAvaliableRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('device has no ports available')
+    throw new ConflictError('device has no ports available', { id: String(this.device) })
   }
 }
 
@@ -28,7 +28,7 @@ export class AllPortsAreAvaliableRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('device has ports in use')
+    throw new ConflictError('device has ports in use', { id: String(this.device.id) })
   }
 }
 
@@ -45,7 +45,10 @@ export class IpIsDifferentRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('both devices have the same IP')
+    throw new ConflictError('both devices have the same IP', {
+      id: [String(this.a.id), String(this.b.id)],
+      ip: String(this.a.ip),
+    })
   }
 }
 

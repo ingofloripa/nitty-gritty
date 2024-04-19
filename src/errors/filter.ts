@@ -9,11 +9,13 @@ import {
   Logger,
 } from '@nestjs/common'
 import { Response } from 'express'
+import { env } from 'process'
 
 @Catch()
 export class ErrorFilter implements ExceptionFilter {
   public catch(error: unknown, host: ArgumentsHost): any {
     if (
+      env['DEBUG'] === 'on' ||
       !(error instanceof HttpException) ||
       error['status'] === HttpStatus.INTERNAL_SERVER_ERROR
     ) {
@@ -26,18 +28,20 @@ export class ErrorFilter implements ExceptionFilter {
   }
 
   private getBody(error: unknown): any {
-    const messages: string[] = []
-    while (!!error) {
-      const msg =
-        error['response']?.['message'] ||
-        error['message'] ||
-        String(error['code'] || '???')
-      messages.push(msg)
-      error = error['cause']
+    const responses: Record<string, unknown>[] = []
+    let cause: any = error
+    while (!!cause) {
+      let response: Record<string, unknown>
+      if (cause.response !== undefined) {
+        response = cause.response
+      } else {
+        // #TRICK: Prop `message` could be non-enumerated.
+        response = { message: cause.message ?? '???', ...cause }
+      }
+      responses.push(response)
+      cause = cause['cause']
     }
-    return {
-      message: messages.flat(),
-    }
+    return responses
   }
 }
 

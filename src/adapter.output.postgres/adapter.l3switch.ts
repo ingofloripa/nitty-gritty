@@ -34,7 +34,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
       .where({ genus: 'switch', id: String(id) })
       .first()
     if (model === undefined) {
-      throw new NotFoundError('switch not found')
+      throw new NotFoundError('switch not found', { id: String(id) })
     }
     return model
   }
@@ -47,7 +47,9 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
     const model = mapFromL3Switch(l3switch)
     await this.db('devices').insert(model)
     if (l3switch.getNetworks().length > 0) {
-      throw new InternalServerError('Panic (unable to persist switch networks)')
+      throw new InternalServerError('unable to persist switch networks', {
+        id: String(l3switch.id),
+      })
     }
   }
 
@@ -56,7 +58,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
       .where({ type: 'switch', id: String(id) })
       .delete()
     if (count === 0) {
-      throw new NotFoundError('switch not found')
+      throw new NotFoundError('switch not found', { id: String(id) })
     }
     // #TRICK: links table will be updated automatically by cascading
   }

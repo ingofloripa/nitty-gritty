@@ -6,12 +6,12 @@ export class Ip4 {
   public constructor(ip: string) {
     const parts = ip.split('.')
     if (parts.length !== 4) {
-      throw new BadRequestError('invalid IP (wrong number of octets)')
+      throw new BadRequestError('invalid IP (wrong number of octets)', { ip })
     }
     const octets = parts.map((s) => Number.parseInt(s, 10))
     octets.forEach((octet, index) => {
       if (Number.isNaN(octet) || octet < 0 || octet > 255) {
-        throw new BadRequestError(`invalid IP (invalid octet #${index + 1})`)
+        throw new BadRequestError(`invalid IP (invalid octet #${index + 1})`, { ip })
       }
     })
     this._octets = octets

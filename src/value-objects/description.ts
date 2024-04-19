@@ -8,7 +8,7 @@ export class Description {
       throw new BadRequestError('invalid description (empty string)')
     }
     if (description.length > 128) {
-      throw new BadRequestError('invalid description (string too long)')
+      throw new BadRequestError('invalid description (string too long)', { description })
     }
     this.value = description
   }

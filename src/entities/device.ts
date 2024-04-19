@@ -14,7 +14,10 @@ export abstract class Device {
     numOfPorts: number,
   ) {
     if (numOfPorts < 1 || numOfPorts > 64) {
-      throw new BadRequestError('invalid number of ports')
+      throw new BadRequestError("invalid device's number of ports", {
+        id: String(id),
+        numOfPorts,
+      })
     }
     this.numOfPorts = numOfPorts
   }

@@ -34,7 +34,7 @@ export class RouterOutputAdapter extends RouterOutputPort {
       .where({ genus: 'router', id: String(id) })
       .first()
     if (model === undefined) {
-      throw new NotFoundError('router not found')
+      throw new NotFoundError('router not found', { id: String(id) })
     }
     return model
   }
@@ -47,7 +47,9 @@ export class RouterOutputAdapter extends RouterOutputPort {
     const model = mapFromRouter(router)
     await this.db('devices').insert(model)
     if (router.getLinkedDevices().length > 0) {
-      throw new InternalServerError('Panic (unable to persist router links)')
+      throw new InternalServerError('unable to persist router links', {
+        id: String(router.id),
+      })
     }
   }
 
@@ -56,7 +58,7 @@ export class RouterOutputAdapter extends RouterOutputPort {
       .where({ type: 'router', id: String(id) })
       .delete()
     if (count === 0) {
-      throw new NotFoundError('router not found')
+      throw new NotFoundError('router not found', { id: String(id) })
     }
     // #TRICK: links table will be updated automatically by cascading
   }

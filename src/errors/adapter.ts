@@ -7,9 +7,28 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 
-export const BadRequestError = BadRequestException
-export const ConflictError = ConflictException
-export const InternalServerError = InternalServerErrorException
-export const NotFoundError = NotFoundException
+export class BadRequestError extends BadRequestException {
+  public constructor(message: string, extras: Record<string, unknown> = {}) {
+    super({ message, ...extras })
+  }
+}
+
+export class ConflictError extends ConflictException {
+  public constructor(message: string, extras: Record<string, unknown> = {}) {
+    super({ message, ...extras })
+  }
+}
+
+export class NotFoundError extends NotFoundException {
+  public constructor(message: string, extras: Record<string, unknown> = {}) {
+    super({ message, ...extras })
+  }
+}
+
+export class InternalServerError extends InternalServerErrorException {
+  public constructor(message: string, extras: Record<string, unknown> = {}) {
+    super({ message: `[Panic] ${message}`, ...extras })
+  }
+}
 
 // EOF

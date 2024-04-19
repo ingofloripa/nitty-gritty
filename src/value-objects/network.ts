@@ -13,12 +13,12 @@ export class Network {
       throw new BadRequestError('invalid network (empty name)')
     }
     if (name.length > 128) {
-      throw new BadRequestError('invalid network (name too long)')
+      throw new BadRequestError('invalid network (name too long)', { name })
     }
     this.name = name
     this.ip = ip
     if (!Number.isInteger(cidr) || cidr < 8 || cidr > 31) {
-      throw new BadRequestError('invalid network (CIDR out of range)')
+      throw new BadRequestError('invalid network (CIDR out of range)', { name, cidr })
     }
     this.cidr = cidr
   }

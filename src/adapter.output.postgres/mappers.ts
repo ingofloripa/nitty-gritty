@@ -29,8 +29,8 @@ export const mapToRouter = <T extends Router = Router>(
   linkModels: LinkModel[],
 ): T => {
   if (routerModel.genus !== 'router') {
-    throw new InternalServerError({
-      message: 'invalid model',
+    throw new InternalServerError('unexpected router model', {
+      id: routerModel.id,
       genus: routerModel.genus,
     })
   }
@@ -49,7 +49,10 @@ export const mapToRouter = <T extends Router = Router>(
       router = new EdgeRouter(id, desc, ip, location, country, numOfPorts) as T
       break
     default:
-      throw new InternalServerError('unknown type of router')
+      throw new InternalServerError('unexpected router species', {
+        id: router.id,
+        species: routerModel.species,
+      })
   }
   const linkedDevices: Id[] = linkModels.map((link) => Id.from(link.child))
   router.initializeLinkedDevices(linkedDevices)
@@ -64,8 +67,8 @@ export const mapToL3Switch = (
   networkModels: NetworkModel[],
 ): L3Switch => {
   if (l3switchModel.genus !== 'switch') {
-    throw new InternalServerError({
-      message: 'invalid model',
+    throw new InternalServerError('unexpected switch model', {
+      id: l3switchModel.id,
       genus: l3switchModel.genus,
     })
   }

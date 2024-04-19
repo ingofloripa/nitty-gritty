@@ -35,7 +35,10 @@ export class NetworkIpIsAvaliableRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new ConflictError('network IP already used')
+    throw new ConflictError("switch's network IP already used", {
+      id: String(this.l3switch.id),
+      ip: String(this.networkIp),
+    })
   }
 }
 
@@ -52,7 +55,10 @@ export class NetworkExistsRule extends AbstractRule {
   }
 
   protected createError(): Error {
-    throw new NotFoundError('network not found')
+    throw new NotFoundError('switch network not found', {
+      id: String(this.l3switch.id),
+      network: String(this.networkName),
+    })
   }
 }
 
