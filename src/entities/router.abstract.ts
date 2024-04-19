@@ -1,6 +1,5 @@
 // Written by Ingo Schmidt, in 2024.
 
-import { InternalServerError } from 'src/errors'
 import {
   AllPortsAreAvaliableRule,
   DeviceIsAtSuitableCountryRule,
@@ -25,20 +24,20 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
     super(id, description, ip, location, numOfPorts)
   }
 
-  // #TRICK: late initialization required for entity rehidration from the output port
-  public setLinkedDevices(devices: LINKABLE_DEVICE[]): void {
-    this.devices = new Map<string, LINKABLE_DEVICE>()
-    for (const device of devices) {
-      this.devices.set(String(device.id), device)
-      if (this.devices.size === this.numOfPorts) {
+  // #TRICK: Late initialization.
+  // Required for entity rehidration from the output port.
+  // This function has no sanity checks at all, the caller is responsable to do it.
+  public initializeLinkedDevices(linkedDevices: Id[]): void {
+    for (const deviceId of linkedDevices) {
+      this.deviceIds.add(String(deviceId))
+      if (this.deviceIds.size === this.numOfPorts) {
         break
       }
     }
   }
 
-  public getLinkedDevices(): LINKABLE_DEVICE[] {
-    this.assertIsNotShallowInstance()
-    return Array.from(this.devices.values())
+  public getLinkedDevices(): Id[] {
+    return Array.from(this.deviceIds.values()).map(Id.from)
   }
 
   public linkDevice(device: LINKABLE_DEVICE): void {
@@ -47,34 +46,24 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
     new IpIsDifferentRule(this, device).passOrThrow()
     new DeviceIsLinkableRule(this, device).passOrThrow()
     new DeviceIsAtSuitableCountryRule(this, device).passOrThrow()
-    this.devices.set(String(device.id), device)
+    this.deviceIds.add(String(device.id))
   }
 
   public unlinkDevice(device: LINKABLE_DEVICE): void {
     new DeviceIsLinkedRule(this, device).passOrThrow()
     new AllPortsAreAvaliableRule(this).passOrThrow()
-    this.devices.delete(String(device.id))
+    this.deviceIds.delete(String(device.id))
   }
 
   public get numOfPortsUsed(): number {
-    this.assertIsNotShallowInstance()
-    return this.devices.size
+    return this.deviceIds.size
   }
 
   public get genus(): string {
     return 'router'
   }
 
-  private assertIsNotShallowInstance(): void {
-    if (this.devices === undefined) {
-      throw new InternalServerError({
-        message: 'Panic (shallow router instance)',
-        routerId: String(this.id),
-      })
-    }
-  }
-
-  private devices: Map<string, LINKABLE_DEVICE>
+  private readonly deviceIds = new Set<string>()
 }
 
 // EOF

@@ -1,30 +1,28 @@
 // Written by Ingo Schmidt, in 2024.
 
-import { InternalServerError } from 'src/errors'
 import {
   NetworkExistsRule,
   NetworkIpIsAvaliableRule,
   NetworkNameIsAvailableRule,
   PortIsAvaliableRule,
 } from 'src/rules'
-import { Network } from 'src/value-objects'
+import { Description, Id, Ip4, Location, Network } from 'src/value-objects'
 import { Device } from './device'
 
 export class L3Switch extends Device {
-  // #TRICK: late initialization required for entity rehidration from the output port
-  public setNetworks(networks: Network[]): void {
-    const _networks = new Map() as Map<string, Network>
-    for (const network of networks) {
-      _networks.set(network.name, network)
-      if (_networks.size === this.numOfPorts) {
-        break
-      }
-    }
-    this.networks = _networks
+  public constructor(
+    id: Id,
+    description: Description,
+    ip: Ip4,
+    location: Location,
+    numOfPorts: number,
+    networks: Network[],
+  ) {
+    super(id, description, ip, location, numOfPorts)
+    networks.forEach(this.addNetwork.bind(this))
   }
 
   public getNetworks(): Network[] {
-    this.assertIsNotShallowInstance()
     return Array.from(this.networks.values())
   }
 
@@ -41,7 +39,6 @@ export class L3Switch extends Device {
   }
 
   public get numOfPortsUsed(): number {
-    this.assertIsNotShallowInstance()
     return this.networks.size
   }
 
@@ -53,16 +50,7 @@ export class L3Switch extends Device {
     return 'l3'
   }
 
-  private assertIsNotShallowInstance(): void {
-    if (this.networks === undefined) {
-      throw new InternalServerError({
-        message: 'Panic (shallow layer 3 switch instance)',
-        routerId: String(this.id),
-      })
-    }
-  }
-
-  private networks: Map<string, Network>
+  private readonly networks = new Map<string, Network>()
 }
 
 // EOF

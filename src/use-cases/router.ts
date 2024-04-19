@@ -40,7 +40,6 @@ export class RouterUseCase extends RouterInputPort {
     } else {
       throw new InternalServerError('invalid router type')
     }
-    router.setLinkedDevices([])
     await this.router.persist(router)
     return router
   }

@@ -7,7 +7,7 @@ import { Router } from 'src/entities'
 import { InternalServerError, NotFoundError } from 'src/errors'
 import { RouterOutputPort } from 'src/port.output'
 import { Id } from 'src/value-objects'
-import { mapFromRouter, mapToDevice } from './mappers'
+import { mapFromRouter, mapToRouter } from './mappers'
 import { DeviceModel, LinkModel } from './models'
 
 @Injectable()
@@ -24,12 +24,9 @@ export class RouterOutputAdapter extends RouterOutputPort {
   }
 
   async retrieve(id: Id): Promise<Router> {
-    const routerModel = await this.fetchRouterModel(id)
-    const router = mapToDevice<Router>(routerModel)
-    const linkedDeviceModels = await this.fetchLinkedDeviceModels(id)
-    const linkedDevices = linkedDeviceModels.map(mapToDevice)
-    router.setLinkedDevices(linkedDevices)
-    return router
+    const router = await this.fetchRouterModel(id)
+    const links = await this.fetchLinkModels(id)
+    return mapToRouter(router, links)
   }
 
   private async fetchRouterModel(id: Id): Promise<DeviceModel> {
@@ -42,22 +39,15 @@ export class RouterOutputAdapter extends RouterOutputPort {
     return model
   }
 
-  private async fetchLinkedDeviceModels(id: Id) {
-    const links = await this.db<LinkModel>('links')
-      .select('child')
-      .where({ parent: String(id) })
-    const routers = await this.db<DeviceModel>('devices').whereIn(
-      'id',
-      links.map((link) => link.child),
-    )
-    return routers
+  private fetchLinkModels(id: Id) {
+    return this.db<LinkModel>('links').where({ parent: String(id) })
   }
 
   async persist(router: Router): Promise<void> {
     const model = mapFromRouter(router)
     await this.db('devices').insert(model)
     if (router.getLinkedDevices().length > 0) {
-      throw new InternalServerError('Panic (unable to persist router linked devices)')
+      throw new InternalServerError('Panic (unable to persist router links)')
     }
   }
 

@@ -12,7 +12,13 @@ export const mapFromRouter = (router: Router): RouterDto => ({
   latitude: router.location.point.lat,
   longitude: router.location.point.lon,
   numOfPorts: router.numOfPorts,
-  linkedDeviceIds: router.getLinkedDevices().map((router) => String(router.id)),
+  linkedDeviceIds: router.getLinkedDevices().map(String),
+})
+
+const mapFromNetwork = (network: Network): NetworkDto => ({
+  name: network.name,
+  ip: String(network.ip),
+  cidr: network.cidr,
 })
 
 export const mapFromL3Switch = (l3switch: L3Switch): L3SwitchDto => ({
@@ -23,12 +29,6 @@ export const mapFromL3Switch = (l3switch: L3Switch): L3SwitchDto => ({
   longitude: l3switch.location.point.lon,
   numOfPorts: l3switch.numOfPorts,
   networks: l3switch.getNetworks().map(mapFromNetwork),
-})
-
-export const mapFromNetwork = (network: Network): NetworkDto => ({
-  name: network.name,
-  ip: String(network.ip),
-  cidr: network.cidr,
 })
 
 // EOF

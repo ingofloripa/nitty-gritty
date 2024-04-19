@@ -4,7 +4,7 @@ import { L3Switch } from 'src/entities'
 import { CreateL3SwitchArgs, L3SwitchInputPort } from 'src/port.input'
 import { L3SwitchOutputPort, LinkOutputPort, RouterOutputPort } from 'src/port.output'
 import { AllPortsAreAvaliableRule } from 'src/rules'
-import { Id } from 'src/value-objects'
+import { Id, Network } from 'src/value-objects'
 
 export class L3SwitchUseCase extends L3SwitchInputPort {
   public constructor(
@@ -30,8 +30,8 @@ export class L3SwitchUseCase extends L3SwitchInputPort {
     numOfPorts,
   }: CreateL3SwitchArgs): Promise<L3Switch> {
     const id = Id.create()
-    const l3switch = new L3Switch(id, description, ip, location, numOfPorts)
-    l3switch.setNetworks([])
+    const networks: Network[] = []
+    const l3switch = new L3Switch(id, description, ip, location, numOfPorts, networks)
     await this.l3switch.persist(l3switch)
     return l3switch
   }

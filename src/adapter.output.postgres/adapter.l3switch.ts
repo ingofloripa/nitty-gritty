@@ -7,7 +7,7 @@ import { L3Switch } from 'src/entities'
 import { InternalServerError, NotFoundError } from 'src/errors'
 import { L3SwitchOutputPort } from 'src/port.output'
 import { Id } from 'src/value-objects'
-import { mapFromL3Switch, mapToDevice, mapToNetwork } from './mappers'
+import { mapFromL3Switch, mapToL3Switch } from './mappers'
 import { DeviceModel, NetworkModel } from './models'
 
 @Injectable()
@@ -24,12 +24,9 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
   }
 
   async retrieve(id: Id): Promise<L3Switch> {
-    const model = await this.fetchSwitchModel(id)
-    const l3switch = mapToDevice<L3Switch>(model)
-    const networksModels = await this.fetchNetworkModels(id)
-    const networks = networksModels.map(mapToNetwork)
-    l3switch.setNetworks(networks)
-    return l3switch
+    const l3switch = await this.fetchSwitchModel(id)
+    const networks = await this.fetchNetworkModels(id)
+    return mapToL3Switch(l3switch, networks)
   }
 
   private async fetchSwitchModel(id: Id): Promise<DeviceModel> {
@@ -43,10 +40,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
   }
 
   private async fetchNetworkModels(id: Id) {
-    const models = await this.db<NetworkModel>('networks').where({
-      sw_id: String(id),
-    })
-    return models
+    return this.db<NetworkModel>('networks').where({ sw_id: String(id) })
   }
 
   async persist(l3switch: L3Switch): Promise<void> {

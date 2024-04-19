@@ -52,7 +52,7 @@ const LINKS: LinkModel[] = [
 const NETWORKS: NetworkModel[] = [
   {
     sw_id: '30000000-0000-4000-8000-000000000000',
-    name: '1',
+    name: 'genesis',
     ip: '10.0.0.1',
     cidr: 24,
   },

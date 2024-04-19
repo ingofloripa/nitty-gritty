@@ -13,7 +13,7 @@ export class DeviceIsNotLinkedRule extends AbstractRule {
   }
 
   public isSatisfied(): boolean {
-    return !this.router.getLinkedDevices().some(({ id }) => id.isEqual(this.device.id))
+    return !this.router.getLinkedDevices().some((id) => id.isEqual(this.device.id))
   }
 
   protected createError(): Error {
@@ -30,7 +30,7 @@ export class DeviceIsLinkedRule extends AbstractRule {
   }
 
   public isSatisfied(): boolean {
-    return this.router.getLinkedDevices().some(({ id }) => id.isEqual(this.device.id))
+    return this.router.getLinkedDevices().some((id) => id.isEqual(this.device.id))
   }
 
   protected createError(): Error {
