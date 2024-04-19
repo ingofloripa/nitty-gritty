@@ -1,9 +1,10 @@
 // Written by Ingo Schmidt, in 2024.
 
 import { CoreRouter, EdgeRouter, Router } from 'src/entities'
-import { ConflictError, InternalServerError } from 'src/errors'
+import { InternalServerError } from 'src/errors'
 import { CreateRouterArgs, RouterInputPort } from 'src/port.input'
 import { LinkOutputPort, RouterOutputPort } from 'src/port.output'
+import { AllPortsAreAvaliableRule } from 'src/rules'
 import { Id } from 'src/value-objects'
 
 export class RouterUseCase extends RouterInputPort {
@@ -68,9 +69,7 @@ export class RouterUseCase extends RouterInputPort {
 
   async delete(id: Id): Promise<void> {
     const router = await this.router.retrieve(id)
-    if (!router.isAllPortsAvailable()) {
-      throw new ConflictError('unable to delete this router (it is in use)')
-    }
+    new AllPortsAreAvaliableRule(router).passOrThrow()
     await this.router.delete(router.id)
   }
 }

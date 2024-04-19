@@ -1,9 +1,9 @@
 // Written by Ingo Schmidt, in 2024.
 
 import { L3Switch } from 'src/entities'
-import { ConflictError } from 'src/errors'
 import { CreateL3SwitchArgs, L3SwitchInputPort } from 'src/port.input'
 import { L3SwitchOutputPort, LinkOutputPort, RouterOutputPort } from 'src/port.output'
+import { AllPortsAreAvaliableRule } from 'src/rules'
 import { Id } from 'src/value-objects'
 
 export class L3SwitchUseCase extends L3SwitchInputPort {
@@ -58,9 +58,7 @@ export class L3SwitchUseCase extends L3SwitchInputPort {
 
   async delete(id: Id): Promise<void> {
     const l3switch = await this.l3switch.retrieve(id)
-    if (!l3switch.isAllPortsAvailable()) {
-      throw new ConflictError('unable to delete this switch (it is in use)')
-    }
+    new AllPortsAreAvaliableRule(l3switch).passOrThrow()
     await this.l3switch.delete(l3switch.id)
   }
 }

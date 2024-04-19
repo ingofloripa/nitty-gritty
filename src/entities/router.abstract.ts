@@ -1,8 +1,17 @@
 // Written by Ingo Schmidt, in 2024.
 
-import { ConflictError, InternalServerError } from 'src/errors'
-import { Device } from './device'
+import { InternalServerError } from 'src/errors'
+import {
+  AllPortsAreAvaliableRule,
+  DeviceIsAtSuitableCountryRule,
+  DeviceIsLinkableRule,
+  DeviceIsLinkedRule,
+  DeviceIsNotLinkedRule,
+  IpIsDifferentRule,
+  PortIsAvaliableRule,
+} from 'src/rules'
 import { Country, Description, Id, Ip4, Location } from 'src/value-objects'
+import { Device } from './device'
 
 export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends Device {
   public constructor(
@@ -33,43 +42,23 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
   }
 
   public linkDevice(device: LINKABLE_DEVICE): void {
-    this.assertIsNotShallowInstance()
-    if (this.devices.has(String(device.id))) {
-      throw new ConflictError('device already linked')
-    }
-    if (this.isAllPortsUsed()) {
-      throw new ConflictError('unable to link another device (no ports available)')
-    }
-    if (!this.isDeviceLinkable(device)) {
-      throw new ConflictError('unable to link this kind of device')
-    }
-    if (this.ip.isEqual(device.ip)) {
-      throw new ConflictError('unable to link this device (same IP)')
-    }
+    new DeviceIsNotLinkedRule(this, device).passOrThrow()
+    new PortIsAvaliableRule(this).passOrThrow()
+    new IpIsDifferentRule(this, device).passOrThrow()
+    new DeviceIsLinkableRule(this, device).passOrThrow()
+    new DeviceIsAtSuitableCountryRule(this, device).passOrThrow()
     this.devices.set(String(device.id), device)
   }
 
-  protected abstract isDeviceLinkable(device: LINKABLE_DEVICE): boolean
-
   public unlinkDevice(device: LINKABLE_DEVICE): void {
-    this.assertIsNotShallowInstance()
-    if (this.devices === undefined || !this.devices.has(String(device.id))) {
-      throw new ConflictError('device already unlinked')
-    }
-    if (!device.isAllPortsAvailable()) {
-      throw new ConflictError('unable to unlink this device (it is in use)')
-    }
+    new DeviceIsLinkedRule(this, device).passOrThrow()
+    new AllPortsAreAvaliableRule(this).passOrThrow()
     this.devices.delete(String(device.id))
   }
 
-  public isAllPortsAvailable(): boolean {
+  public get numOfPortsUsed(): number {
     this.assertIsNotShallowInstance()
-    return this.devices.size === 0
-  }
-
-  public isAllPortsUsed(): boolean {
-    this.assertIsNotShallowInstance()
-    return this.devices?.size === this.numOfPorts
+    return this.devices.size
   }
 
   public get genus(): string {

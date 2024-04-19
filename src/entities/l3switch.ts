@@ -1,6 +1,12 @@
 // Written by Ingo Schmidt, in 2024.
 
-import { ConflictError, InternalServerError } from 'src/errors'
+import { InternalServerError } from 'src/errors'
+import {
+  NetworkExistsRule,
+  NetworkIpIsAvaliableRule,
+  NetworkNameIsAvailableRule,
+  PortIsAvaliableRule,
+} from 'src/rules'
 import { Network } from 'src/value-objects'
 import { Device } from './device'
 
@@ -23,35 +29,20 @@ export class L3Switch extends Device {
   }
 
   public addNetwork(network: Network): void {
-    this.assertIsNotShallowInstance()
-    if (this.networks.has(network.name)) {
-      throw new ConflictError('network name already used')
-    }
-    if (this.getNetworks().some(({ ip }) => ip.isEqual(network.ip))) {
-      throw new ConflictError('network IP already used')
-    }
-    if (this.isAllPortsUsed()) {
-      throw new ConflictError('unable to add another network (no ports available)')
-    }
+    new NetworkNameIsAvailableRule(this, network.name).passOrThrow()
+    new NetworkIpIsAvaliableRule(this, network.ip).passOrThrow()
+    new PortIsAvaliableRule(this).passOrThrow()
     this.networks.set(network.name, network)
   }
 
   public removeNetwork(network: Network): void {
-    this.assertIsNotShallowInstance()
-    if (this.networks === undefined || !this.networks.has(network.name)) {
-      throw new ConflictError('network already added')
-    }
+    new NetworkExistsRule(this, network).passOrThrow()
     this.networks.delete(network.name)
   }
 
-  public isAllPortsAvailable(): boolean {
+  public get numOfPortsUsed(): number {
     this.assertIsNotShallowInstance()
-    return this.networks.size === 0
-  }
-
-  public isAllPortsUsed(): boolean {
-    this.assertIsNotShallowInstance()
-    return this.networks?.size === this.numOfPorts
+    return this.networks.size
   }
 
   public get genus(): string {

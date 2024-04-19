@@ -18,13 +18,11 @@ export abstract class Device {
     return `${id}:${desc}@${this.ip}:${this.location}`
   }
 
+  public abstract get numOfPortsUsed(): number
+
   public abstract get genus(): string
 
   public abstract get species(): string
-
-  public abstract isAllPortsAvailable(): boolean
-
-  public abstract isAllPortsUsed(): boolean
 }
 
 // EOF
