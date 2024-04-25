@@ -61,6 +61,7 @@ export class L3SwitchOutputAdapter extends L3SwitchOutputPort {
       throw new NotFoundError('switch not found', { id: String(id) })
     }
     // #TRICK: links table will be updated automatically by cascading
+    // #TRICK: networks table will be updated automatically by cascading
   }
 }
 

@@ -21,11 +21,11 @@ export const up = async (db: Knex) => {
     table.foreign('child').references('id').inTable('devices').onDelete('CASCADE')
   })
   await db.schema.createTable('networks', (table) => {
-    table.string('sw_id')
+    table.string('sw_id').primary()
     table.string('name')
     table.string('ip')
     table.smallint('cidr')
-    table.foreign('sw_id').references('id').inTable('devices')
+    table.foreign('sw_id').references('id').inTable('devices').onDelete('CASCADE')
   })
 }
 
