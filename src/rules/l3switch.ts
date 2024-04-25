@@ -22,7 +22,7 @@ export class NetworkNameIsAvailableRule extends AbstractRule {
   }
 }
 
-export class NetworkIpIsAvaliableRule extends AbstractRule {
+export class NetworkIpIsAvailableRule extends AbstractRule {
   public constructor(
     private readonly l3switch: L3Switch,
     private readonly networkIp: Ip4,

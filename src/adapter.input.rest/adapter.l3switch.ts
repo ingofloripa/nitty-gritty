@@ -44,7 +44,7 @@ export class L3SwitchInputAdapter {
   }
 
   @Post(':switchId/to/:edgeRouterId')
-  async createlinkRouterToCoreRouter(
+  async linkRouterToCoreRouter(
     @Param('switchId') switchId: string,
     @Param('edgeRouterId') edgeRouterId: string,
   ): Promise<void> {

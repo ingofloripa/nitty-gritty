@@ -4,7 +4,7 @@ import { Device } from 'src/entities'
 import { ConflictError } from 'src/errors'
 import { AbstractRule } from './abstract'
 
-export class PortIsAvaliableRule extends AbstractRule {
+export class PortIsAvailableRule extends AbstractRule {
   public constructor(private readonly device: Device) {
     super()
   }
@@ -18,7 +18,7 @@ export class PortIsAvaliableRule extends AbstractRule {
   }
 }
 
-export class AllPortsAreAvaliableRule extends AbstractRule {
+export class AllPortsAreAvailableRule extends AbstractRule {
   public constructor(private readonly device: Device) {
     super()
   }

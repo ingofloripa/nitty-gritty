@@ -1,13 +1,13 @@
 // Written by Ingo Schmidt, in 2024.
 
 import {
-  AllPortsAreAvaliableRule,
+  AllPortsAreAvailableRule,
   DeviceIsAtSuitableCountryRule,
   DeviceIsLinkableRule,
   DeviceIsLinkedRule,
   DeviceIsNotLinkedRule,
   IpIsDifferentRule,
-  PortIsAvaliableRule,
+  PortIsAvailableRule,
 } from 'src/rules'
 import { Country, Description, Id, Ip4, Location } from 'src/value-objects'
 import { Device } from './device'
@@ -25,8 +25,8 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
   }
 
   // #TRICK: Late initialization.
-  // Required for entity rehidration from the output port.
-  // This function has no sanity checks at all, the caller is responsable to do it.
+  // Required for entity rehydration from the output port.
+  // This function has no sanity checks at all, the caller is responsible to do it.
   public initializeLinkedDevices(linkedDevices: Id[]): void {
     for (const deviceId of linkedDevices) {
       this.deviceIds.add(String(deviceId))
@@ -42,7 +42,7 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
 
   public linkDevice(device: LINKABLE_DEVICE): void {
     new DeviceIsNotLinkedRule(this, device).passOrThrow()
-    new PortIsAvaliableRule(this).passOrThrow()
+    new PortIsAvailableRule(this).passOrThrow()
     new IpIsDifferentRule(this, device).passOrThrow()
     new DeviceIsLinkableRule(this, device).passOrThrow()
     new DeviceIsAtSuitableCountryRule(this, device).passOrThrow()
@@ -51,7 +51,7 @@ export abstract class Router<LINKABLE_DEVICE extends Device = Device> extends De
 
   public unlinkDevice(device: LINKABLE_DEVICE): void {
     new DeviceIsLinkedRule(this, device).passOrThrow()
-    new AllPortsAreAvaliableRule(this).passOrThrow()
+    new AllPortsAreAvailableRule(this).passOrThrow()
     this.deviceIds.delete(String(device.id))
   }
 

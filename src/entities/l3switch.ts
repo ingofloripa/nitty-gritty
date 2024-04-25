@@ -2,9 +2,9 @@
 
 import {
   NetworkExistsRule,
-  NetworkIpIsAvaliableRule,
+  NetworkIpIsAvailableRule,
   NetworkNameIsAvailableRule,
-  PortIsAvaliableRule,
+  PortIsAvailableRule,
 } from 'src/rules'
 import { Description, Id, Ip4, Location, Network } from 'src/value-objects'
 import { Device } from './device'
@@ -28,8 +28,8 @@ export class L3Switch extends Device {
 
   public addNetwork(network: Network): void {
     new NetworkNameIsAvailableRule(this, network.name).passOrThrow()
-    new NetworkIpIsAvaliableRule(this, network.ip).passOrThrow()
-    new PortIsAvaliableRule(this).passOrThrow()
+    new NetworkIpIsAvailableRule(this, network.ip).passOrThrow()
+    new PortIsAvailableRule(this).passOrThrow()
     this.networks.set(network.name, network)
   }
 

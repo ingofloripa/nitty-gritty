@@ -4,7 +4,7 @@ import { CoreRouter, EdgeRouter, Router } from 'src/entities'
 import { InternalServerError } from 'src/errors'
 import { CreateRouterArgs, RouterInputPort } from 'src/port.input'
 import { LinkOutputPort, RouterOutputPort } from 'src/port.output'
-import { AllPortsAreAvaliableRule } from 'src/rules'
+import { AllPortsAreAvailableRule } from 'src/rules'
 import { Id } from 'src/value-objects'
 
 export class RouterUseCase extends RouterInputPort {
@@ -66,7 +66,7 @@ export class RouterUseCase extends RouterInputPort {
 
   async delete(id: Id): Promise<void> {
     const router = await this.router.retrieve(id)
-    new AllPortsAreAvaliableRule(router).passOrThrow()
+    new AllPortsAreAvailableRule(router).passOrThrow()
     await this.router.delete(router.id)
   }
 }
