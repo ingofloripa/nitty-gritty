@@ -1,0 +1,9 @@
+{
+    "name": "nitty-gritty-dev-env",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
+    }
+}

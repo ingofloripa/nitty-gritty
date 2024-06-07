@@ -15,7 +15,7 @@ import { NetworkOutputAdapter } from './adapter.network'
     KnexModule.forRoot({
       config: {
         client: 'pg',
-        connection: 'postgres://postgres@postgres/nitty_gritty',
+        connection: 'postgres://postgres@db/nitty_gritty',
         // debug: true,
         migrations: {
           directory: __dirname + '/migrations',

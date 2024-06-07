@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15-alpine
+    user: postgres
+    environment:
+      - POSTGRES_DB=nitty_gritty
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports: ['5432:5432']
+    volumes:
+      - db:/var/lib/postgresql/data
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready']
+      start_period: 6s
+      interval: 3s
+      retries: 6
+
+  app:
+    image: node:20-alpine 
+    user: node
+    working_dir: /usr/src/app
+    command: yarn start:dev
+    environment:
+      - DEBUG=off
+    ports: ['3000:3000']
+    volumes: [.:/usr/src/app]
+    depends_on:
+      db: { condition: service_healthy }
+
+volumes:
+  db:
